@@ -46,10 +46,6 @@
 				✨ Enter the Magic Kingdom
 			</button>
 		</form>
-
-		<p class="hint">
-			💡 Hint: Default credentials are <code>admin</code> / <code>password</code>
-		</p>
 	</div>
 </div>
 
