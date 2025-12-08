@@ -33,12 +33,15 @@ This is a SvelteKit application for tracking Disneyland Happy Meal toy collectio
 - Development: `npm run dev`
 - Build: `npm run build`
 - Preview: `npm run preview`
+- Deploy: Push to GitHub main branch (auto-deploys to Cloudflare Pages)
 
 ### Architecture
 - **Frontend**: Svelte 5 with modern runes ($state, $props, $effect)
 - **Backend**: SvelteKit server routes (API endpoints)
 - **Data**: Markdown files with frontmatter (gray-matter library)
+- **Database**: Turso (hosted SQLite) for authentication
 - **Routing**: File-based routing with dynamic routes
+- **Deployment**: Cloudflare Pages with adapter-cloudflare
 
 ### Project Structure
 - `/src/routes/` - Pages and API endpoints
