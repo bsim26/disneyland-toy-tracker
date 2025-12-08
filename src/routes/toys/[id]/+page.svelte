@@ -2,6 +2,14 @@
 	import type { PageData } from './$types';
 	
 	let { data }: { data: PageData } = $props();
+	let showDelete = $state(false);
+	
+	function handleKeydown(event: KeyboardEvent) {
+		if (event.ctrlKey && event.shiftKey && event.key === 'D') {
+			event.preventDefault();
+			showDelete = !showDelete;
+		}
+	}
 	
 	async function deleteToy() {
 		if (!confirm('Are you sure you want to delete this toy?')) return;
@@ -15,6 +23,8 @@
 		}
 	}
 </script>
+
+<svelte:window onkeydown={handleKeydown} />
 
 <svelte:head>
 	<title>{data.toy.name} - Disneyland Toy Tracker</title>
@@ -55,7 +65,9 @@
 
 			<div class="actions">
 				<a href="/toys/{data.toy.id}/edit" class="btn-primary">Edit</a>
-				<button onclick={deleteToy} class="btn-danger">Delete</button>
+				{#if showDelete}
+					<button onclick={deleteToy} class="btn-danger">Delete</button>
+				{/if}
 			</div>
 		</div>
 	</div>
