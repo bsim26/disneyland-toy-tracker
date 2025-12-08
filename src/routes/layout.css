@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Bubblegum+Sans&display=swap');
+
+:root {
+	--disney-blue: #0063B2;
+	--disney-light-blue: #00A3E0;
+	--disney-yellow: #FFD700;
+	--disney-red: #E4002B;
+	--disney-purple: #8B5CF6;
+	--disney-pink: #FF69B4;
+	--disney-orange: #FF6B35;
+}
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: 'Baloo 2', cursive, sans-serif;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	background-attachment: fixed;
+	min-height: 100vh;
+	color: #2c3e50;
+}
+
+h1, h2, h3 {
+	font-family: 'Bubblegum Sans', cursive;
+}
+
+/* Add some magical sparkles */
+@keyframes sparkle {
+	0%, 100% { opacity: 0; }
+	50% { opacity: 1; }
+}
+
+@keyframes float {
+	0%, 100% { transform: translateY(0px); }
+	50% { transform: translateY(-10px); }
+}
+

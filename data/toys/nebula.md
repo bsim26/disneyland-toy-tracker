@@ -1,0 +1,5 @@
+---
+name: Nebula
+quantity: 0
+picture: nya.jpg
+---
