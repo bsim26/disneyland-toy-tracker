@@ -63,7 +63,6 @@
     "vitest-browser-svelte": "^2.0.1"
   },
   "dependencies": {
-    "@node-rs/argon2": "^2.0.2",
     "better-sqlite3": "^12.5.0",
     "dotenv": "^16.4.5",
     "gray-matter": "^4.0.3"
