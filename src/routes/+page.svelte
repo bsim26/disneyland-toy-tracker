@@ -15,10 +15,6 @@
 			<button type="submit" class="btn-logout">🚪 Logout</button>
 		</form>
 	</div>
-	
-	<nav>
-		<a href="/toys/new" class="btn-primary">+ Add New Toy</a>
-	</nav>
 
 	<div class="toy-grid">
 		{#each data.toys as toy}
