@@ -16,5 +16,9 @@
 	{:else}
 		<h2>Database Error</h2>
 		<p>❌ {data.error}</p>
+		{#if data.stack}
+			<h3>Stack Trace</h3>
+			<pre style="background: #f5f5f5; padding: 1rem; overflow: auto;">{data.stack}</pre>
+		{/if}
 	{/if}
 </div>
