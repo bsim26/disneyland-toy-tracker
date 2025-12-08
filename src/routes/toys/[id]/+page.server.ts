@@ -1,29 +1,27 @@
-import { readFile } from 'fs/promises';
-import { join } from 'path';
-// @ts-ignore - gray-matter doesn't have types
-import matter from 'gray-matter';
+import { db } from '$lib/server/db';
+import { toy } from '$lib/server/db/schema';
+import { eq } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import type { Toy } from '../../+page.server';
 
 export const load: PageServerLoad = async ({ params }) => {
-	const toyPath = join(process.cwd(), 'data', 'toys', `${params.id}.md`);
-	
 	try {
-		const content = await readFile(toyPath, 'utf-8');
-		const { data } = matter(content);
+		const toys = await db
+			.select()
+			.from(toy)
+			.where(eq(toy.id, params.id))
+			.limit(1);
 		
-		const toy: Toy = {
-			id: params.id,
-			name: data.name || 'Unnamed Toy',
-			quantity: data.quantity || 0,
-			dateObtained: data.dateObtained || new Date().toISOString(),
-			picture: data.picture,
-			notes: data.notes
-		};
+		if (toys.length === 0) {
+			throw error(404, 'Toy not found');
+		}
 		
-		return { toy };
-	} catch {
+		return { toy: toys[0] };
+	} catch (err) {
+		if (err && typeof err === 'object' && 'status' in err) {
+			throw err;
+		}
 		throw error(404, 'Toy not found');
 	}
 };

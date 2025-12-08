@@ -13,6 +13,17 @@ export const session = sqliteTable('session', {
 	expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull()
 });
 
+export const toy = sqliteTable('toy', {
+	id: text('id').primaryKey(),
+	name: text('name').notNull(),
+	quantity: integer('quantity').notNull().default(0),
+	dateObtained: text('date_obtained'),
+	picture: text('picture').notNull().default('nya.jpg'),
+	notes: text('notes')
+});
+
 export type Session = typeof session.$inferSelect;
 
 export type User = typeof user.$inferSelect;
+
+export type Toy = typeof toy.$inferSelect;

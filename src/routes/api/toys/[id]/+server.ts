@@ -1,46 +1,38 @@
-import { readFile, writeFile, unlink } from 'fs/promises';
-import { join } from 'path';
+import { db } from '$lib/server/db';
+import { toy } from '$lib/server/db/schema';
+import { eq } from 'drizzle-orm';
 import { json, error } from '@sveltejs/kit';
-// @ts-ignore - gray-matter doesn't have types
-import matter from 'gray-matter';
 import type { RequestHandler } from './$types';
 
 export const PUT: RequestHandler = async ({ params, request }) => {
 	const data = await request.json();
-	const toyPath = join(process.cwd(), 'data', 'toys', `${params.id}.md`);
 	
 	try {
-		// Read existing file to preserve any additional content
-		await readFile(toyPath, 'utf-8');
-		
-		// Create updated markdown content
-		const frontmatter = [
-			'---',
-			`name: ${data.name}`,
-			`quantity: ${data.quantity}`,
-			`dateObtained: ${data.dateObtained}`,
-			data.picture ? `picture: ${data.picture}` : '',
-			data.notes ? `notes: ${data.notes}` : '',
-			'---',
-			''
-		].filter(Boolean).join('\n');
-		
-		// Write the updated file
-		await writeFile(toyPath, frontmatter, 'utf-8');
+		// Update in database
+		const result = await db
+			.update(toy)
+			.set({
+				name: data.name,
+				quantity: data.quantity,
+				dateObtained: data.dateObtained || null,
+				picture: data.picture || 'nya.jpg',
+				notes: data.notes || null
+			})
+			.where(eq(toy.id, params.id));
 		
 		return json({ success: true });
-	} catch {
-		throw error(404, 'Toy not found');
+	} catch (err) {
+		console.error('Error updating toy:', err);
+		throw error(500, 'Failed to update toy');
 	}
 };
 
 export const DELETE: RequestHandler = async ({ params }) => {
-	const toyPath = join(process.cwd(), 'data', 'toys', `${params.id}.md`);
-	
 	try {
-		await unlink(toyPath);
+		await db.delete(toy).where(eq(toy.id, params.id));
 		return json({ success: true });
-	} catch {
-		throw error(404, 'Toy not found');
+	} catch (err) {
+		console.error('Error deleting toy:', err);
+		throw error(500, 'Failed to delete toy');
 	}
 };
