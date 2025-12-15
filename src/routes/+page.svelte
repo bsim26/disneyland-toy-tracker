@@ -10,14 +10,14 @@
 
 <div class="container">
 	<div class="header">
-		<h1>🎡 Disneyland Happy Meal Toy Collection</h1>
+		<h1>Disneyland Happy Meal Toy Collection</h1>
 		<form method="POST" action="/logout" class="logout-form">
-			<button type="submit" class="btn-logout">🚪 Logout</button>
+			<button type="submit" class="btn-logout"><i class="fa-notdog-duo fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
 		</form>
 	</div>
 
 	<nav style="text-align: center; margin-bottom: 2rem;">
-		<a href="/add-new" class="btn-add">➕ Add New Toy</a>
+		<a href="/add-new" class="btn-add"><i class="fa-notdog-duo fa-solid fa-plus"></i> Add New Toy</a>
 	</nav>
 
 	<div class="toy-grid">
@@ -159,7 +159,9 @@
 	}
 
 	.toy-card::before {
-		content: '⭐';
+		content: '\f005';
+		font-family: 'Font Awesome 7 Notdog Duo';
+		font-weight: 900;
 		position: absolute;
 		top: 10px;
 		right: 10px;
