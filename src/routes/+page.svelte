@@ -16,6 +16,10 @@
 		</form>
 	</div>
 
+	<nav style="text-align: center; margin-bottom: 2rem;">
+		<a href="/add-new" class="btn-add">➕ Add New Toy</a>
+	</nav>
+
 	<div class="toy-grid">
 		{#each data.toys as toy}
 			<div class="toy-card" class:not-acquired={toy.quantity === 0}>
@@ -96,6 +100,26 @@
 	nav {
 		margin-bottom: 2rem;
 		text-align: center;
+	}
+
+	.btn-add {
+		display: inline-block;
+		background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+		color: white;
+		padding: 1rem 2rem;
+		border-radius: 50px;
+		text-decoration: none;
+		font-weight: 700;
+		font-size: 1.2rem;
+		box-shadow: 0 4px 15px rgba(0, 210, 255, 0.4);
+		transition: all 0.3s ease;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+	}
+
+	.btn-add:hover {
+		transform: scale(1.1) rotate(-2deg);
+		box-shadow: 0 6px 20px rgba(0, 210, 255, 0.6);
 	}
 
 	.btn-primary {
