@@ -142,18 +142,20 @@
 
 		<div class="form-group">
 			<label for="picture">Picture</label>
-			<input
-				id="picture-file"
-				type="file"
-				accept="image/*"
-				onchange={handleFileChange}
-				style="margin-bottom: 1rem;"
-			/>
-			{#if picturePreview}
-				<div class="preview">
-					<img src={picturePreview} alt="Preview" />
-				</div>
-			{/if}
+			<div class="file-upload-section">
+				<input
+					id="picture-file"
+					type="file"
+					accept="image/*"
+					onchange={handleFileChange}
+					class="file-input"
+				/>
+				{#if picturePreview}
+					<div class="preview">
+						<img src={picturePreview} alt="Preview" />
+					</div>
+				{/if}
+			</div>
 			<input
 				type="text"
 				id="picture"
@@ -295,13 +297,22 @@
 		display: block;
 	}
 	
+	.file-upload-section {
+		margin-bottom: 1rem;
+	}
+	
+	.file-input,
 	input[type="file"] {
 		padding: 0.5rem;
 		border: 2px dashed #3498db;
 		border-radius: 10px;
 		cursor: pointer;
+		background: white;
+		display: block;
+		width: 100%;
 	}
 	
+	.file-input:hover,
 	input[type="file"]:hover {
 		border-color: #2980b9;
 		background: #f9f9f9;
