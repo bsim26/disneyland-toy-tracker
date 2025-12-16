@@ -3,45 +3,9 @@
 	let quantity = $state(0);
 	let dateObtained = $state(new Date().toISOString().split('T')[0]);
 	let picture = $state('');
-	let pictureFile = $state<File | null>(null);
-	let picturePreview = $state('');
 	let notes = $state('');
 	let isSubmitting = $state(false);
 	let error = $state('');
-	
-	function handleFileChange(e: Event) {
-		const input = e.target as HTMLInputElement;
-		const file = input.files?.[0];
-		
-		if (file) {
-			pictureFile = file;
-			picture = file.name;
-			
-			// Create preview
-			const reader = new FileReader();
-			reader.onload = (e) => {
-				picturePreview = e.target?.result as string;
-			};
-			reader.readAsDataURL(file);
-		}
-	}
-	
-	async function uploadFile(file: File): Promise<string> {
-		const formData = new FormData();
-		formData.append('file', file);
-		
-		const response = await fetch('/api/upload', {
-			method: 'POST',
-			body: formData
-		});
-		
-		if (!response.ok) {
-			throw new Error('Failed to upload file');
-		}
-		
-		const data = await response.json();
-		return data.filename;
-	}
 	
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
@@ -49,12 +13,6 @@
 		error = '';
 		
 		try {
-			let finalPicture = picture;
-			
-			// Upload file if selected
-			if (pictureFile) {
-				finalPicture = await uploadFile(pictureFile);
-			}
 			
 			const response = await fetch('/api/toys', {
 				method: 'POST',
@@ -63,7 +21,7 @@
 					name,
 					quantity,
 					dateObtained,
-					picture: finalPicture || 'nya.jpg',
+					picture: picture || 'nya.jpg',
 					notes
 				})
 			});
@@ -131,23 +89,12 @@
 		<div class="form-group">
 			<label for="picture">Picture</label>
 			<input
-				id="picture-file"
-				type="file"
-				accept="image/*"
-				onchange={handleFileChange}
-				style="margin-bottom: 1rem;"
-			/>
-			{#if picturePreview}
-				<div class="preview">
-					<img src={picturePreview} alt="Preview" />
-				</div>
-			{/if}
-			<input
 				id="picture"
 				type="text"
 				bind:value={picture}
-				placeholder="Or enter filename manually (e.g., mickey-mouse.jpg)"
+				placeholder="Enter filename (e.g., mickey-mouse.jpg)"
 			/>
+			<small>Upload images to the static/images folder, then enter the filename here.</small>
 		</div>
 		
 		<div class="form-group">
@@ -272,31 +219,5 @@
 		border-radius: 10px;
 		margin-bottom: 1rem;
 		border: 2px solid #fcc;
-	}
-	
-	.preview {
-		margin: 1rem 0;
-		border: 2px solid var(--disney-light-blue);
-		border-radius: 10px;
-		overflow: hidden;
-		max-width: 300px;
-	}
-	
-	.preview img {
-		width: 100%;
-		height: auto;
-		display: block;
-	}
-	
-	input[type="file"] {
-		padding: 0.5rem;
-		border: 2px dashed var(--disney-light-blue);
-		border-radius: 10px;
-		cursor: pointer;
-	}
-	
-	input[type="file"]:hover {
-		border-color: var(--disney-pink);
-		background: #f9f9f9;
 	}
 </style>
