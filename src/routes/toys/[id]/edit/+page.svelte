@@ -303,18 +303,20 @@
 	
 	.file-input,
 	input[type="file"] {
-		padding: 0.5rem;
-		border: 2px dashed #3498db;
-		border-radius: 10px;
-		cursor: pointer;
-		background: white;
-		display: block;
-		width: 100%;
+		padding: 0.5rem !important;
+		border: 2px dashed #3498db !important;
+		border-radius: 10px !important;
+		cursor: pointer !important;
+		background: white !important;
+		display: block !important;
+		width: 100% !important;
+		height: auto !important;
+		font-size: 1rem !important;
 	}
 	
 	.file-input:hover,
 	input[type="file"]:hover {
-		border-color: #2980b9;
-		background: #f9f9f9;
+		border-color: #2980b9 !important;
+		background: #f9f9f9 !important;
 	}
 </style>
