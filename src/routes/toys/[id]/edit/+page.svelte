@@ -7,6 +7,8 @@
 	let quantity = $state(0);
 	let dateObtained = $state('');
 	let picture = $state('');
+	let pictureFile = $state<File | null>(null);
+	let picturePreview = $state('');
 	let notes = $state('');
 	let submitting = $state(false);
 	
@@ -16,28 +18,79 @@
 		dateObtained = data.toy.dateObtained.split('T')[0];
 		picture = data.toy.picture || '';
 		notes = data.toy.notes || '';
+		
+		// Set current picture as preview
+		if (picture) {
+			picturePreview = `/images/${picture}`;
+		}
 	});
+	
+	function handleFileChange(e: Event) {
+		const input = e.target as HTMLInputElement;
+		const file = input.files?.[0];
+		
+		if (file) {
+			pictureFile = file;
+			picture = file.name;
+			
+			// Create preview
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				picturePreview = e.target?.result as string;
+			};
+			reader.readAsDataURL(file);
+		}
+	}
+	
+	async function uploadFile(file: File): Promise<string> {
+		const formData = new FormData();
+		formData.append('file', file);
+		
+		const response = await fetch('/api/upload', {
+			method: 'POST',
+			body: formData
+		});
+		
+		if (!response.ok) {
+			throw new Error('Failed to upload file');
+		}
+		
+		const uploadData = await response.json();
+		return uploadData.filename;
+	}
 	
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
 		submitting = true;
 		
-		const response = await fetch(`/api/toys/${data.toy.id}`, {
-			method: 'PUT',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				name,
-				quantity: Number(quantity),
-				dateObtained,
-				picture: picture || undefined,
-				notes: notes || undefined
-			})
-		});
-		
-		if (response.ok) {
-			window.location.href = `/toys/${data.toy.id}`;
-		} else {
-			alert('Failed to update toy');
+		try {
+			let finalPicture = picture;
+			
+			// Upload file if selected
+			if (pictureFile) {
+				finalPicture = await uploadFile(pictureFile);
+			}
+			
+			const response = await fetch(`/api/toys/${data.toy.id}`, {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					name,
+					quantity: Number(quantity),
+					dateObtained,
+					picture: finalPicture || undefined,
+					notes: notes || undefined
+				})
+			});
+			
+			if (response.ok) {
+				window.location.href = `/toys/${data.toy.id}`;
+			} else {
+				alert('Failed to update toy');
+				submitting = false;
+			}
+		} catch (error) {
+			alert(error instanceof Error ? error.message : 'Failed to update toy');
 			submitting = false;
 		}
 	}
@@ -88,14 +141,25 @@
 		</div>
 
 		<div class="form-group">
-			<label for="picture">Picture Filename</label>
+			<label for="picture">Picture</label>
+			<input
+				id="picture-file"
+				type="file"
+				accept="image/*"
+				onchange={handleFileChange}
+				style="margin-bottom: 1rem;"
+			/>
+			{#if picturePreview}
+				<div class="preview">
+					<img src={picturePreview} alt="Preview" />
+				</div>
+			{/if}
 			<input
 				type="text"
 				id="picture"
 				bind:value={picture}
-				placeholder="e.g., mickey-2024.jpg (place in static/images/)"
+				placeholder="Or enter filename manually (e.g., mickey-2024.jpg)"
 			/>
-			<small>Upload images to the <code>static/images/</code> folder, then enter the filename here.</small>
 		</div>
 
 		<div class="form-group">
@@ -215,5 +279,31 @@
 
 	.btn-secondary:hover {
 		background: #bdc3c7;
+	}
+	
+	.preview {
+		margin: 1rem 0;
+		border: 2px solid var(--disney-light-blue);
+		border-radius: 10px;
+		overflow: hidden;
+		max-width: 300px;
+	}
+	
+	.preview img {
+		width: 100%;
+		height: auto;
+		display: block;
+	}
+	
+	input[type="file"] {
+		padding: 0.5rem;
+		border: 2px dashed #3498db;
+		border-radius: 10px;
+		cursor: pointer;
+	}
+	
+	input[type="file"]:hover {
+		border-color: #2980b9;
+		background: #f9f9f9;
 	}
 </style>
