@@ -88,7 +88,7 @@
 
 <div class="container">
 	<nav class="breadcrumb">
-		<a href="/">← Back to Collection</a>
+		<a href="/" class="btn-back">← Back to Collection</a>
 	</nav>
 	
 	<h1>🎈 Add New Toy</h1>
@@ -177,10 +177,25 @@
 		margin-bottom: 2rem;
 	}
 	
-	.breadcrumb a {
-		color: var(--disney-blue);
+	.btn-back {
+		display: inline-block;
+		background: linear-gradient(135deg, var(--disney-light-blue), var(--disney-blue));
+		color: white;
+		padding: 0.75rem 1.5rem;
+		border-radius: 50px;
 		text-decoration: none;
-		font-weight: 600;
+		font-weight: 700;
+		font-size: 1rem;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+	}
+	
+	.btn-back:hover {
+		transform: scale(1.05) rotate(-2deg);
+		box-shadow: 0 6px 20px rgba(52, 152, 219, 0.6);
 	}
 	
 	h1 {

@@ -32,7 +32,7 @@
 
 <div class="container">
 	<nav class="breadcrumb">
-		<a href="/">← Back to Collection</a>
+		<a href="/" class="btn-back">← Back to Collection</a>
 	</nav>
 
 	<div class="toy-detail">

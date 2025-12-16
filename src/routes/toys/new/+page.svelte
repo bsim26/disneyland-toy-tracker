@@ -38,7 +38,7 @@
 
 <div class="container">
 	<nav class="breadcrumb">
-		<a href="/">← Back to Collection</a>
+		<a href="/" class="btn-back"><i class="fa-notdog-duo fa-solid fa-arrow-left"></i> Back to Collection</a>
 	</nav>
 
 	<h1>Add New Toy</h1>
