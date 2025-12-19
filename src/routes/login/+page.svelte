@@ -43,7 +43,7 @@
 			</div>
 
 			<button type="submit" class="btn-login">
-				✨ Enter the Magic Kingdom
+				✨ Step on down Main Street USA!
 			</button>
 		</form>
 	</div>
