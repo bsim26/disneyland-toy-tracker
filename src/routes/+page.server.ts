@@ -1,6 +1,7 @@
 import { db } from '$lib/server/db';
-import { toy } from '$lib/server/db/schema';
-import { desc } from 'drizzle-orm';
+import { toy, userToy } from '$lib/server/db/schema';
+import { desc, eq } from 'drizzle-orm';
+import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export interface Toy {
@@ -12,13 +13,27 @@ export interface Toy {
 	notes: string | null;
 }
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals }) => {
+	// Require authentication
+	if (!locals.user) {
+		throw redirect(302, '/login');
+	}
+	
 	try {
-		// Get all toys from database, sorted by quantity (desc), then by date (desc)
+		// Get user-specific toys by joining toy and userToy tables
 		const toys = await db
-			.select()
+			.select({
+				id: toy.id,
+				name: toy.name,
+				picture: toy.picture,
+				quantity: userToy.quantity,
+				dateObtained: userToy.dateObtained,
+				notes: userToy.notes
+			})
 			.from(toy)
-			.orderBy(desc(toy.quantity), desc(toy.dateObtained));
+			.innerJoin(userToy, eq(toy.id, userToy.toyId))
+			.where(eq(userToy.userId, locals.user.id))
+			.orderBy(desc(userToy.quantity), desc(userToy.dateObtained));
 		
 		return { toys };
 	} catch (err) {

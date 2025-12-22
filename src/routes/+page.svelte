@@ -49,7 +49,9 @@
 					<div class="toy-info">
 						<h3>{toy.name}</h3>
 						<p>Quantity: {toy.quantity}</p>
-						<p class="date">{new Date(toy.dateObtained).toLocaleDateString()}</p>
+						{#if toy.dateObtained}
+							<p class="date">{new Date(toy.dateObtained).toLocaleDateString()}</p>
+						{/if}
 					</div>
 				</a>
 			</div>

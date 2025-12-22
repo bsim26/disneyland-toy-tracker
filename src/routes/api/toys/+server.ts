@@ -1,9 +1,14 @@
 import { db } from '$lib/server/db';
-import { toy } from '$lib/server/db/schema';
-import { json } from '@sveltejs/kit';
+import { toy, userToy } from '$lib/server/db/schema';
+import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({ request, locals }) => {
+	// Require authentication
+	if (!locals.user) {
+		throw error(401, 'Unauthorized');
+	}
+	
 	const data = await request.json();
 	
 	// Create a slug from the name
@@ -12,13 +17,19 @@ export const POST: RequestHandler = async ({ request }) => {
 		.replace(/[^a-z0-9]+/g, '-')
 		.replace(/^-|-$/g, '');
 	
-	// Insert into database
+	// Insert into toy table (master list)
 	await db.insert(toy).values({
 		id,
 		name: data.name,
+		picture: data.picture || 'nya.jpg'
+	});
+	
+	// Insert into userToy table (user-specific data)
+	await db.insert(userToy).values({
+		userId: locals.user.id,
+		toyId: id,
 		quantity: data.quantity || 0,
 		dateObtained: data.dateObtained || null,
-		picture: data.picture || 'nya.jpg',
 		notes: data.notes || null
 	});
 	

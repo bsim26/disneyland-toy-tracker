@@ -5,6 +5,7 @@ import * as table from '$lib/server/db/schema';
 import * as auth from '$lib/server/auth';
 import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeHexLowerCase } from '@oslojs/encoding';
+import { initializeUserToys } from '$lib/server/initializeUserToys';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -40,6 +41,14 @@ export const actions: Actions = {
 
 		if (passwordHash !== existingUser.passwordHash) {
 			return fail(400, { error: 'Invalid username or password' });
+		}
+
+		// Initialize user's toy collection if they don't have any toys yet
+		try {
+			await initializeUserToys(existingUser.id);
+		} catch (error) {
+			console.error('Error initializing user toys:', error);
+			// Don't fail login if toy initialization fails
 		}
 
 		const sessionToken = auth.generateSessionToken();

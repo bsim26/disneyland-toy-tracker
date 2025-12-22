@@ -16,14 +16,23 @@ export const session = sqliteTable('session', {
 export const toy = sqliteTable('toy', {
 	id: text('id').primaryKey(),
 	name: text('name').notNull(),
+	picture: text('picture').notNull().default('nya.jpg')
+});
+
+export const userToy = sqliteTable('user_toy', {
+	userId: text('user_id').notNull().references(() => user.id),
+	toyId: text('toy_id').notNull().references(() => toy.id),
 	quantity: integer('quantity').notNull().default(0),
 	dateObtained: text('date_obtained'),
-	picture: text('picture').notNull().default('nya.jpg'),
 	notes: text('notes')
-});
+}, (table) => ({
+	pk: { columns: [table.userId, table.toyId] }
+}));
 
 export type Session = typeof session.$inferSelect;
 
 export type User = typeof user.$inferSelect;
 
 export type Toy = typeof toy.$inferSelect;
+
+export type UserToy = typeof userToy.$inferSelect;
