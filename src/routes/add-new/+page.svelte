@@ -4,6 +4,7 @@
 	let dateObtained = $state(new Date().toISOString().split('T')[0]);
 	let picture = $state('');
 	let notes = $state('');
+	let boxNumber = $state('');
 	let isSubmitting = $state(false);
 	let error = $state('');
 	
@@ -22,7 +23,8 @@
 					quantity,
 					dateObtained,
 					picture: picture || 'nya.jpg',
-					notes
+					notes,
+					boxNumber: boxNumber || undefined
 				})
 			});
 			
@@ -105,6 +107,17 @@
 				rows="4"
 				placeholder="Any additional notes..."
 			></textarea>
+		</div>
+		
+		<div class="form-group">
+			<label for="boxNumber">Box Number</label>
+			<input
+				id="boxNumber"
+				type="text"
+				bind:value={boxNumber}
+				placeholder="e.g., 1, 2A, B3"
+			/>
+			<small>Optional: Enter the storage box number for this toy.</small>
 		</div>
 		
 		<button type="submit" class="btn-primary" disabled={isSubmitting || !name}>

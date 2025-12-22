@@ -53,6 +53,9 @@
 							<p class="date">{new Date(toy.dateObtained).toLocaleDateString()}</p>
 						{/if}
 					</div>
+					{#if toy.boxNumber}
+						<div class="box-number">Box {toy.boxNumber}</div>
+					{/if}
 				</a>
 			</div>
 		{/each}
@@ -300,6 +303,24 @@
 	.toy-card a {
 		text-decoration: none;
 		color: inherit;
+		position: relative;
+		display: block;
+	}
+
+	.box-number {
+		position: absolute;
+		bottom: 10px;
+		right: 10px;
+		background: linear-gradient(135deg, var(--disney-pink), var(--disney-purple));
+		color: white;
+		padding: 0.4rem 0.8rem;
+		border-radius: 20px;
+		font-weight: 700;
+		font-size: 0.85rem;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+		z-index: 5;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
 	}
 
 	.toy-card img {

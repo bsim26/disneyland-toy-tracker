@@ -28,7 +28,8 @@ export const PUT: RequestHandler = async ({ params, request, locals }) => {
 			.set({
 				quantity: data.quantity,
 				dateObtained: data.dateObtained || null,
-				notes: data.notes || null
+				notes: data.notes || null,
+				boxNumber: data.boxNumber || null
 			})
 			.where(and(
 				eq(userToy.toyId, params.id),

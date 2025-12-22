@@ -46,6 +46,11 @@
 				<div class="meta-item">
 					<strong>Date Obtained:</strong> {new Date(data.toy.dateObtained).toLocaleDateString()}
 				</div>
+				{#if data.toy.boxNumber}
+					<div class="meta-item">
+						<strong>Box Number:</strong> {data.toy.boxNumber}
+					</div>
+				{/if}
 			</div>
 
 			{#if data.toy.notes}

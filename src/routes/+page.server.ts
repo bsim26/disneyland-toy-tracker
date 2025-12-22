@@ -11,6 +11,7 @@ export interface Toy {
 	dateObtained: string | null;
 	picture: string;
 	notes: string | null;
+	boxNumber: string | null;
 }
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -30,7 +31,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 				picture: toy.picture,
 				quantity: userToy.quantity,
 				dateObtained: userToy.dateObtained,
-				notes: userToy.notes
+				notes: userToy.notes,
+				boxNumber: userToy.boxNumber
 			})
 			.from(toy)
 			.innerJoin(userToy, eq(toy.id, userToy.toyId))

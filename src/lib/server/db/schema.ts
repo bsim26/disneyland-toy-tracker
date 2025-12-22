@@ -24,7 +24,8 @@ export const userToy = sqliteTable('user_toy', {
 	toyId: text('toy_id').notNull().references(() => toy.id),
 	quantity: integer('quantity').notNull().default(0),
 	dateObtained: text('date_obtained'),
-	notes: text('notes')
+	notes: text('notes'),
+	boxNumber: text('box_number')
 }, (table) => ({
 	pk: { columns: [table.userId, table.toyId] }
 }));

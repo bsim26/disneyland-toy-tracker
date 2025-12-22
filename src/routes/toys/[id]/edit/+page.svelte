@@ -8,6 +8,7 @@
 	let dateObtained = $state('');
 	let picture = $state('');
 	let notes = $state('');
+	let boxNumber = $state('');
 	let submitting = $state(false);
 	
 	$effect(() => {
@@ -16,6 +17,7 @@
 		dateObtained = data.toy.dateObtained?.split('T')[0] || '';
 		picture = data.toy.picture || '';
 		notes = data.toy.notes || '';
+		boxNumber = data.toy.boxNumber || '';
 	});
 	
 	async function handleSubmit(e: Event) {
@@ -31,7 +33,8 @@
 					quantity: Number(quantity),
 					dateObtained,
 					picture: picture || undefined,
-					notes: notes || undefined
+					notes: notes || undefined,
+					boxNumber: boxNumber || undefined
 				})
 			});
 			
@@ -116,6 +119,17 @@
 				rows="4"
 				placeholder="Any additional information about this toy..."
 			></textarea>
+		</div>
+
+		<div class="form-group">
+			<label for="boxNumber">Box Number</label>
+			<input
+				type="text"
+				id="boxNumber"
+				bind:value={boxNumber}
+				placeholder="e.g., 1, 2A, B3"
+			/>
+			<small>Optional: Enter the storage box number for this toy.</small>
 		</div>
 
 		<div class="actions">

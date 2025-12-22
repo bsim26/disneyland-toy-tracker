@@ -30,7 +30,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		toyId: id,
 		quantity: data.quantity || 0,
 		dateObtained: data.dateObtained || null,
-		notes: data.notes || null
+		notes: data.notes || null,
+		boxNumber: data.boxNumber || null
 	});
 	
 	return json({ id }, { status: 201 });

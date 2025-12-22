@@ -19,7 +19,8 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 				picture: toy.picture,
 				quantity: userToy.quantity,
 				dateObtained: userToy.dateObtained,
-				notes: userToy.notes
+				notes: userToy.notes,
+				boxNumber: userToy.boxNumber
 			})
 			.from(toy)
 			.innerJoin(userToy, eq(toy.id, userToy.toyId))
