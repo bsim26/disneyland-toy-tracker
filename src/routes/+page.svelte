@@ -2,6 +2,13 @@
 	import type { PageData } from './$types';
 	
 	let { data }: { data: PageData } = $props();
+	
+	// Calculate progress: percentage of toys with quantity > 0
+	let progress = $derived(() => {
+		if (data.toys.length === 0) return 0;
+		const toysAcquired = data.toys.filter(toy => toy.quantity > 0).length;
+		return Math.round((toysAcquired / data.toys.length) * 100);
+	});
 </script>
 
 <svelte:head>
@@ -16,7 +23,17 @@
 		</form>
 	</div>
 
-	<nav style="text-align: center; margin-bottom: 2rem;">
+	<nav class="nav-container">
+		<div class="progress-container">
+			<div class="progress-label">
+				<span class="progress-text">Collection Progress</span>
+				<span class="progress-percentage">{progress()}%</span>
+			</div>
+			<div class="progress-bar">
+				<div class="progress-fill" style="width: {progress()}%"></div>
+			</div>
+			<span class="progress-description">{data.toys.filter(t => t.quantity > 0).length} of {data.toys.length} toys acquired</span>
+		</div>
 		<a href="/add-new" class="btn-add"><i class="fa-notdog-duo fa-solid fa-plus"></i> Add New Toy</a>
 	</nav>
 
@@ -99,6 +116,91 @@
 
 	nav {
 		margin-bottom: 2rem;
+		text-align: center;
+	}
+
+	.nav-container {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 2rem;
+		flex-wrap: wrap;
+		margin-bottom: 2rem;
+	}
+
+	.progress-container {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		min-width: 280px;
+		max-width: 400px;
+		flex: 1;
+	}
+
+	.progress-label {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-weight: 700;
+		color: var(--disney-blue);
+	}
+
+	.progress-text {
+		font-size: 1rem;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+	}
+
+	.progress-percentage {
+		font-size: 1.3rem;
+		color: var(--disney-pink);
+		text-shadow: 1px 1px 0px var(--disney-yellow);
+	}
+
+	.progress-bar {
+		width: 100%;
+		height: 30px;
+		background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+		border-radius: 50px;
+		overflow: hidden;
+		box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+		border: 3px solid var(--disney-blue);
+		position: relative;
+	}
+
+	.progress-fill {
+		height: 100%;
+		background: linear-gradient(135deg, var(--disney-pink), var(--disney-purple), var(--disney-yellow));
+		border-radius: 50px;
+		transition: width 0.5s ease;
+		box-shadow: 0 0 10px rgba(255, 105, 180, 0.6);
+		position: relative;
+		overflow: hidden;
+	}
+
+	.progress-fill::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: linear-gradient(90deg, 
+			transparent, 
+			rgba(255,255,255,0.3), 
+			transparent);
+		animation: shimmer 2s infinite;
+	}
+
+	@keyframes shimmer {
+		0% { transform: translateX(-100%); }
+		100% { transform: translateX(100%); }
+	}
+
+	.progress-description {
+		font-size: 0.85rem;
+		color: #666;
+		font-weight: 600;
 		text-align: center;
 	}
 
