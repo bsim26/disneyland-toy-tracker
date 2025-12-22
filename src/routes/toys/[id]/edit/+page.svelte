@@ -57,7 +57,7 @@
 
 <div class="container">
 	<nav class="breadcrumb">
-		<a href="/toys/{data.toy.id}">← Back to {data.toy.name}</a>
+		<a href="/toys/{data.toy.id}" class="btn-back">← Back to {data.toy.name}</a>
 	</nav>
 
 	<h1>Edit Toy</h1>
@@ -152,9 +152,19 @@
 		margin-bottom: 2rem;
 	}
 
-	.breadcrumb a {
-		color: #3498db;
+	.btn-back {
+		display: inline-block;
+		padding: 0.75rem 1.5rem;
+		background: #ecf0f1;
+		color: #2c3e50;
 		text-decoration: none;
+		border-radius: 4px;
+		font-weight: 600;
+		transition: background 0.2s;
+	}
+
+	.btn-back:hover {
+		background: #bdc3c7;
 	}
 
 	h1 {
