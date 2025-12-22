@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Bubblegum+Sans&display=swap');
 
+@font-face {
+	font-family: 'Started By A Mouse';
+	src: url('/fonts/startedbyamouse.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
 :root {
 	--disney-blue: #0063B2;
 	--disney-light-blue: #00A3E0;

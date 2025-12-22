@@ -72,10 +72,11 @@
 	}
 
 	h1 {
+		font-family: 'Started By A Mouse', 'Bubblegum Sans', cursive;
 		color: var(--disney-blue);
 		margin-bottom: 2rem;
 		text-align: center;
-		font-size: 3rem;
+		font-size: 4rem;
 		text-shadow: 3px 3px 0px var(--disney-yellow),
 		             6px 6px 0px var(--disney-light-blue);
 		animation: float 3s ease-in-out infinite;

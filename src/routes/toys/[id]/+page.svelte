@@ -2,17 +2,9 @@
 	import type { PageData } from './$types';
 	
 	let { data }: { data: PageData } = $props();
-	let showDelete = $state(false);
-	
-	function handleKeydown(event: KeyboardEvent) {
-		if (event.ctrlKey && event.shiftKey && event.key === 'D') {
-			event.preventDefault();
-			showDelete = !showDelete;
-		}
-	}
 	
 	async function deleteToy() {
-		if (!confirm('Are you sure you want to delete this toy?')) return;
+		if (!confirm('Are you sure you want to delete this toy? This action cannot be undone.')) return;
 		
 		const response = await fetch(`/api/toys/${data.toy.id}`, {
 			method: 'DELETE'
@@ -20,11 +12,11 @@
 		
 		if (response.ok) {
 			window.location.href = '/';
+		} else {
+			alert('Failed to delete toy. Please try again.');
 		}
 	}
 </script>
-
-<svelte:window onkeydown={handleKeydown} />
 
 <svelte:head>
 	<title>{data.toy.name} - Disneyland Toy Tracker</title>
@@ -65,9 +57,7 @@
 
 			<div class="actions">
 				<a href="/toys/{data.toy.id}/edit" class="btn-primary">Edit</a>
-				{#if showDelete}
-					<button onclick={deleteToy} class="btn-danger">Delete</button>
-				{/if}
+				<button onclick={deleteToy} class="btn-danger">Delete</button>
 			</div>
 		</div>
 	</div>
