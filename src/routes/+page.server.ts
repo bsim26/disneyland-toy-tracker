@@ -19,6 +19,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 		throw redirect(302, '/login');
 	}
 	
+	console.log('Loading toys for user:', locals.user.id, locals.user.username);
+	
 	try {
 		// Get user-specific toys by joining toy and userToy tables
 		const toys = await db
@@ -34,6 +36,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 			.innerJoin(userToy, eq(toy.id, userToy.toyId))
 			.where(eq(userToy.userId, locals.user.id))
 			.orderBy(desc(userToy.quantity), desc(userToy.dateObtained));
+		
+		console.log('Loaded toys count:', toys.length);
 		
 		return { toys };
 	} catch (err) {
