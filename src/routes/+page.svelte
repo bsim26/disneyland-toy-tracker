@@ -34,7 +34,6 @@
 			</div>
 			<span class="progress-description">{data.toys.filter(t => t.quantity > 0).length} of {data.toys.length} toys acquired</span>
 		</div>
-		<a href="/add-new" class="btn-add"><i class="fa-notdog-duo fa-solid fa-plus"></i> Add New Toy</a>
 	</nav>
 
 	<div class="toy-grid">

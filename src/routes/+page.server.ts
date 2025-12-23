@@ -37,7 +37,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 			.from(toy)
 			.innerJoin(userToy, eq(toy.id, userToy.toyId))
 			.where(eq(userToy.userId, locals.user.id))
-			.orderBy(desc(userToy.quantity), desc(userToy.dateObtained));
+			.orderBy(userToy.boxNumber, desc(userToy.quantity), desc(userToy.dateObtained));
 		
 		console.log('Loaded toys count:', toys.length);
 		
