@@ -531,6 +531,7 @@
 		color: var(--disney-blue);
 		font-size: 1.1rem;
 		pointer-events: none;
+		z-index: 10;
 	}
 
 	.search-input {
