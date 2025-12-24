@@ -80,7 +80,7 @@
 
 	<div class="controls">
 		<div class="search-container">
-			<i class="fa-solid fa-search search-icon"></i>
+			<i class="fa-jelly-duo fa-regular fa-magnifying-glass search-icon"></i>
 			<input 
 				type="text" 
 				placeholder="Search toys..." 
