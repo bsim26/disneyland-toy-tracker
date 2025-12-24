@@ -102,21 +102,21 @@
 					class:active={filterBy === 'all'}
 					onclick={() => filterBy = 'all'}
 				>
-					<i class="fa-solid fa-list"></i> All
+					<i class="fa-solid fa-list"></i><span class="btn-text"> All</span>
 				</button>
 				<button 
 					class="filter-btn"
 					class:active={filterBy === 'acquired'}
 					onclick={() => filterBy = 'acquired'}
 				>
-					<i class="fa-solid fa-check-circle"></i> Acquired
+					<i class="fa-solid fa-check-circle"></i><span class="btn-text"> Acquired</span>
 				</button>
 				<button 
 					class="filter-btn"
 					class:active={filterBy === 'not-acquired'}
 					onclick={() => filterBy = 'not-acquired'}
 				>
-					<i class="fa-solid fa-circle"></i> Not Acquired
+					<i class="fa-solid fa-circle"></i><span class="btn-text"> Not Acquired</span>
 				</button>
 			</div>
 		</div>
@@ -129,21 +129,21 @@
 					class:active={sortBy === 'box'}
 					onclick={() => sortBy = 'box'}
 				>
-					<i class="fa-solid fa-box"></i> Box #
+					<i class="fa-solid fa-box"></i><span class="btn-text"> Box #</span>
 				</button>
 				<button 
 					class="sort-btn"
 					class:active={sortBy === 'name'}
 					onclick={() => sortBy = 'name'}
 				>
-					<i class="fa-solid fa-sort-alpha-down"></i> Name
+					<i class="fa-solid fa-sort-alpha-down"></i><span class="btn-text"> Name</span>
 				</button>
 				<button 
 					class="sort-btn"
 					class:active={sortBy === 'date'}
 					onclick={() => sortBy = 'date'}
 				>
-					<i class="fa-solid fa-calendar"></i> Date
+					<i class="fa-solid fa-calendar"></i><span class="btn-text"> Date</span>
 				</button>
 			</div>
 		</div>
@@ -671,5 +671,41 @@
 
 	.sort-btn i {
 		margin-right: 0.4rem;
+	}
+
+	@media (max-width: 768px) {
+		.filter-label,
+		.sort-label {
+			display: none;
+		}
+
+		.btn-text {
+			display: none;
+		}
+
+		.filter-btn,
+		.sort-btn {
+			padding: 0.7rem;
+			width: 44px;
+			height: 44px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.filter-btn i,
+		.sort-btn i {
+			margin-right: 0;
+			font-size: 1.1rem;
+		}
+
+		.controls {
+			gap: 1rem;
+		}
+
+		.search-container {
+			min-width: 100%;
+			flex-basis: 100%;
+		}
 	}
 </style>
