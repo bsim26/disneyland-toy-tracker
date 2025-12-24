@@ -89,7 +89,7 @@
 			/>
 			{#if searchQuery}
 				<button class="clear-search" onclick={() => searchQuery = ''}>
-					<i class="fa-solid fa-times"></i>
+					<i class="fa-jelly-duo fa-regular fa-circle-xmark"></i>
 				</button>
 			{/if}
 		</div>
@@ -102,21 +102,21 @@
 					class:active={filterBy === 'all'}
 					onclick={() => filterBy = 'all'}
 				>
-					<i class="fa-solid fa-list"></i><span class="btn-text"> All</span>
+					<i class="fa-jelly-duo fa-regular fa-list"></i><span class="btn-text"> All</span>
 				</button>
 				<button 
 					class="filter-btn"
 					class:active={filterBy === 'acquired'}
 					onclick={() => filterBy = 'acquired'}
 				>
-					<i class="fa-solid fa-check-circle"></i><span class="btn-text"> Acquired</span>
+					<i class="fa-jelly-duo fa-regular fa-circle-check"></i><span class="btn-text"> Acquired</span>
 				</button>
 				<button 
 					class="filter-btn"
 					class:active={filterBy === 'not-acquired'}
 					onclick={() => filterBy = 'not-acquired'}
 				>
-					<i class="fa-solid fa-circle"></i><span class="btn-text"> Not Acquired</span>
+					<i class="fa-jelly-duo fa-regular fa-circle-xmark"></i><span class="btn-text"> Not Acquired</span>
 				</button>
 			</div>
 		</div>
@@ -129,34 +129,35 @@
 					class:active={sortBy === 'box'}
 					onclick={() => sortBy = 'box'}
 				>
-					<i class="fa-solid fa-box"></i><span class="btn-text"> Box #</span>
+					<i class="fa-jelly-duo fa-regular fa-box"></i><span class="btn-text"> Box #</span>
 				</button>
 				<button 
 					class="sort-btn"
 					class:active={sortBy === 'name'}
 					onclick={() => sortBy = 'name'}
 				>
-					<i class="fa-solid fa-sort-alpha-down"></i><span class="btn-text"> Name</span>
+					<i class="fa-duotone fa-solid fa-arrow-down-a-z"></i><span class="btn-text"> Name</span>
 				</button>
 				<button 
 					class="sort-btn"
 					class:active={sortBy === 'date'}
 					onclick={() => sortBy = 'date'}
 				>
-					<i class="fa-solid fa-calendar"></i><span class="btn-text"> Date</span>
+					<i class="fa-jelly-duo fa-regular fa-calendar"></i><span class="btn-text"> Date</span>
 				</button>
 			</div>
 		</div>
 	</div>
 
 	{#if filteredAndSortedToys().length === 0}
-		<p class="empty-state">
+		<div class="empty-state">
+			<img src="/images/crying.png" alt="No Results" class="empty-state-image" />
 			{#if searchQuery}
-				No toys found matching "{searchQuery}"
+				<p>No toys found matching "{searchQuery}"</p>
 			{:else}
-				No toys yet. Add your first toy to get started!
+				<p>No toys yet. Add your first toy to get started!</p>
 			{/if}
-		</p>
+		</div>
 	{:else}
 		<div class="toy-grid">
 			{#each filteredAndSortedToys() as toy}
@@ -494,6 +495,18 @@
 		border-radius: 20px;
 		border: 4px dashed var(--disney-pink);
 		margin: 2rem 0;
+	}
+
+	.empty-state-image {
+		max-width: 300px;
+		width: 100%;
+		height: auto;
+		margin-bottom: 2rem;
+		border-radius: 10px;
+	}
+
+	.empty-state p {
+		margin: 0;
 	}
 
 	.controls {
