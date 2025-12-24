@@ -3,6 +3,48 @@
 	
 	let { data }: { data: PageData } = $props();
 	
+	// State for search and sort
+	let searchQuery = $state('');
+	let sortBy = $state<'box' | 'name' | 'date'>('box');
+	let filterBy = $state<'all' | 'acquired' | 'not-acquired'>('all');
+	
+	// Filter and sort toys
+	let filteredAndSortedToys = $derived(() => {
+		// First filter by search query
+		let result = data.toys.filter(toy => 
+			toy.name.toLowerCase().includes(searchQuery.toLowerCase())
+		);
+		
+		// Filter by acquisition status
+		if (filterBy === 'acquired') {
+			result = result.filter(toy => toy.quantity > 0);
+		} else if (filterBy === 'not-acquired') {
+			result = result.filter(toy => toy.quantity === 0);
+		}
+		
+		// Then sort
+		result.sort((a, b) => {
+			if (sortBy === 'box') {
+				// Sort by box number (nulls last)
+				if (!a.boxNumber && !b.boxNumber) return 0;
+				if (!a.boxNumber) return 1;
+				if (!b.boxNumber) return -1;
+				return a.boxNumber.localeCompare(b.boxNumber, undefined, { numeric: true });
+			} else if (sortBy === 'name') {
+				return a.name.localeCompare(b.name);
+			} else if (sortBy === 'date') {
+				// Sort by date (nulls last)
+				if (!a.dateObtained && !b.dateObtained) return 0;
+				if (!a.dateObtained) return 1;
+				if (!b.dateObtained) return -1;
+				return new Date(b.dateObtained).getTime() - new Date(a.dateObtained).getTime();
+			}
+			return 0;
+		});
+		
+		return result;
+	});
+	
 	// Calculate progress: percentage of toys with quantity > 0
 	let progress = $derived(() => {
 		if (data.toys.length === 0) return 0;
@@ -36,8 +78,88 @@
 		</div>
 	</nav>
 
-	<div class="toy-grid">
-		{#each data.toys as toy}
+	<div class="controls">
+		<div class="search-container">
+			<i class="fa-solid fa-search search-icon"></i>
+			<input 
+				type="text" 
+				placeholder="Search toys..." 
+				bind:value={searchQuery}
+				class="search-input"
+			/>
+			{#if searchQuery}
+				<button class="clear-search" onclick={() => searchQuery = ''}>
+					<i class="fa-solid fa-times"></i>
+				</button>
+			{/if}
+		</div>
+		
+		<div class="filter-container">
+			<span class="filter-label">Filter:</span>
+			<div class="filter-buttons">
+				<button 
+					class="filter-btn"
+					class:active={filterBy === 'all'}
+					onclick={() => filterBy = 'all'}
+				>
+					<i class="fa-solid fa-list"></i> All
+				</button>
+				<button 
+					class="filter-btn"
+					class:active={filterBy === 'acquired'}
+					onclick={() => filterBy = 'acquired'}
+				>
+					<i class="fa-solid fa-check-circle"></i> Acquired
+				</button>
+				<button 
+					class="filter-btn"
+					class:active={filterBy === 'not-acquired'}
+					onclick={() => filterBy = 'not-acquired'}
+				>
+					<i class="fa-solid fa-circle"></i> Not Acquired
+				</button>
+			</div>
+		</div>
+		
+		<div class="sort-container">
+			<span class="sort-label">Sort by:</span>
+			<div class="sort-buttons">
+				<button 
+					class="sort-btn"
+					class:active={sortBy === 'box'}
+					onclick={() => sortBy = 'box'}
+				>
+					<i class="fa-solid fa-box"></i> Box #
+				</button>
+				<button 
+					class="sort-btn"
+					class:active={sortBy === 'name'}
+					onclick={() => sortBy = 'name'}
+				>
+					<i class="fa-solid fa-sort-alpha-down"></i> Name
+				</button>
+				<button 
+					class="sort-btn"
+					class:active={sortBy === 'date'}
+					onclick={() => sortBy = 'date'}
+				>
+					<i class="fa-solid fa-calendar"></i> Date
+				</button>
+			</div>
+		</div>
+	</div>
+
+	{#if filteredAndSortedToys().length === 0}
+		<p class="empty-state">
+			{#if searchQuery}
+				No toys found matching "{searchQuery}"
+			{:else}
+				No toys yet. Add your first toy to get started!
+			{/if}
+		</p>
+	{:else}
+		<div class="toy-grid">
+			{#each filteredAndSortedToys() as toy}
 			<div class="toy-card" class:not-acquired={toy.quantity === 0}>
 				<a href="/toys/{toy.id}">
 					{#if toy.picture}
@@ -57,11 +179,8 @@
 					{/if}
 				</a>
 			</div>
-		{/each}
-	</div>
-
-	{#if data.toys.length === 0}
-		<p class="empty-state">No toys yet. Add your first toy to get started!</p>
+			{/each}
+		</div>
 	{/if}
 </div>
 
@@ -374,5 +493,183 @@
 		background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
 		border-radius: 20px;
 		border: 4px dashed var(--disney-pink);
+		margin: 2rem 0;
+	}
+
+	.controls {
+		display: flex;
+		gap: 2rem;
+		margin-bottom: 2rem;
+		flex-wrap: wrap;
+		align-items: flex-start;
+	}
+
+	.search-container {
+		position: relative;
+		flex: 1;
+		min-width: 280px;
+	}
+
+	.search-icon {
+		position: absolute;
+		left: 1.2rem;
+		top: 50%;
+		transform: translateY(-50%);
+		color: var(--disney-blue);
+		font-size: 1.1rem;
+		pointer-events: none;
+	}
+
+	.search-input {
+		width: 100%;
+		padding: 1rem 3rem 1rem 3rem;
+		border: 3px solid var(--disney-blue);
+		border-radius: 50px;
+		font-size: 1.1rem;
+		font-weight: 600;
+		background: white;
+		transition: all 0.3s ease;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+	}
+
+	.search-input:focus {
+		outline: none;
+		border-color: var(--disney-pink);
+		box-shadow: 0 6px 16px rgba(255, 105, 180, 0.3);
+		transform: translateY(-2px);
+	}
+
+	.clear-search {
+		position: absolute;
+		right: 1rem;
+		top: 50%;
+		transform: translateY(-50%);
+		background: var(--disney-pink);
+		color: white;
+		border: none;
+		width: 28px;
+		height: 28px;
+		border-radius: 50%;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.2s ease;
+		font-size: 0.9rem;
+	}
+
+	.clear-search:hover {
+		background: var(--disney-purple);
+		transform: translateY(-50%) scale(1.1);
+	}
+
+	.filter-container {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.filter-label {
+		font-weight: 700;
+		color: var(--disney-blue);
+		font-size: 1.1rem;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+	}
+
+	.filter-buttons {
+		display: flex;
+		gap: 0.5rem;
+		background: white;
+		padding: 0.3rem;
+		border-radius: 50px;
+		border: 3px solid var(--disney-blue);
+		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+	}
+
+	.filter-btn {
+		padding: 0.7rem 1.2rem;
+		border: none;
+		border-radius: 50px;
+		background: transparent;
+		color: var(--disney-blue);
+		font-weight: 700;
+		font-size: 0.95rem;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		white-space: nowrap;
+	}
+
+	.filter-btn:hover {
+		background: rgba(0, 123, 255, 0.1);
+		transform: scale(1.05);
+	}
+
+	.filter-btn.active {
+		background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+		color: white;
+		box-shadow: 0 4px 12px rgba(0, 210, 255, 0.4);
+	}
+
+	.filter-btn i {
+		margin-right: 0.4rem;
+	}
+
+	.sort-container {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.sort-label {
+		font-weight: 700;
+		color: var(--disney-blue);
+		font-size: 1.1rem;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+	}
+
+	.sort-buttons {
+		display: flex;
+		gap: 0.5rem;
+		background: white;
+		padding: 0.3rem;
+		border-radius: 50px;
+		border: 3px solid var(--disney-blue);
+		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+	}
+
+	.sort-btn {
+		padding: 0.7rem 1.2rem;
+		border: none;
+		border-radius: 50px;
+		background: transparent;
+		color: var(--disney-blue);
+		font-weight: 700;
+		font-size: 0.95rem;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		white-space: nowrap;
+	}
+
+	.sort-btn:hover {
+		background: rgba(0, 123, 255, 0.1);
+		transform: scale(1.05);
+	}
+
+	.sort-btn.active {
+		background: linear-gradient(135deg, var(--disney-pink), var(--disney-purple));
+		color: white;
+		box-shadow: 0 4px 12px rgba(255, 105, 180, 0.4);
+	}
+
+	.sort-btn i {
+		margin-right: 0.4rem;
 	}
 </style>
